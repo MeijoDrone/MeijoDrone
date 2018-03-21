@@ -1,0 +1,8 @@
+prefix=/home/ikeda/editing_ros/open_source/open_source/sip_tf_manager_ws/devel
+
+Name: sip_tf_manager
+Description: Description of sip_tf_manager
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/ikeda/editing_ros/open_source/open_source/sip_tf_manager_ws/devel/lib 
+Requires: 

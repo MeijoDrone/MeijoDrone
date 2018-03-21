@@ -1,0 +1,14 @@
+digraph G {
+"map" -> "odom"[label="Broadcaster: /sip_broadcaster_node\nAverage rate: 4990000.000 Hz\nMost recent transform: 1492133785.170 ( 162.284 sec old)\nBuffer length: 0.000 sec\n"];
+"odom" -> "base_footprint"[label="Broadcaster: /sip_broadcaster_node\nAverage rate: 4990000.000 Hz\nMost recent transform: 1492133785.170 ( 162.284 sec old)\nBuffer length: 0.000 sec\n"];
+"base_footprint" -> "base_link"[label="Broadcaster: /sip_broadcaster_node\nAverage rate: 4990000.000 Hz\nMost recent transform: 1492133785.170 ( 162.284 sec old)\nBuffer length: 0.000 sec\n"];
+"base_link" -> "base_stabilized"[label="Broadcaster: /sip_broadcaster_node\nAverage rate: 4990000.000 Hz\nMost recent transform: 1492133785.170 ( 162.284 sec old)\nBuffer length: 0.000 sec\n"];
+"base_stabilized" -> "base_frame"[label="Broadcaster: /sip_broadcaster_node\nAverage rate: 4990000.000 Hz\nMost recent transform: 1492133785.170 ( 162.284 sec old)\nBuffer length: 0.000 sec\n"];
+"base_frame" -> "urg"[label="Broadcaster: /sip_broadcaster_node\nAverage rate: 4990000.000 Hz\nMost recent transform: 1492133785.170 ( 162.284 sec old)\nBuffer length: 0.000 sec\n"];
+"base_frame" -> "alt"[label="Broadcaster: /sip_broadcaster_node\nAverage rate: 4990000.000 Hz\nMost recent transform: 1492133785.170 ( 162.284 sec old)\nBuffer length: 0.000 sec\n"];
+"base_frame" -> "imu"[label="Broadcaster: /sip_broadcaster_node\nAverage rate: 4990000.000 Hz\nMost recent transform: 1492133785.170 ( 162.284 sec old)\nBuffer length: 0.000 sec\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1492133947.454"[ shape=plaintext ] ;
+ }->"map";
+}

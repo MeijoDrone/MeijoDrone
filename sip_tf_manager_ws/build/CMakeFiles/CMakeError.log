@@ -1,0 +1,53 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/ikeda/editing_ros/open_source/open_source/sip_tf_manager_ws/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec2785666921/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2785666921.dir/build.make CMakeFiles/cmTryCompileExec2785666921.dir/build
+make[1]: ディレクトリ `/home/ikeda/editing_ros/open_source/open_source/sip_tf_manager_ws/build/CMakeFiles/CMakeTmp' に入ります
+/usr/bin/cmake -E cmake_progress_report /home/ikeda/editing_ros/open_source/open_source/sip_tf_manager_ws/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2785666921.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec2785666921.dir/CheckSymbolExists.c.o   -c /home/ikeda/editing_ros/open_source/open_source/sip_tf_manager_ws/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTryCompileExec2785666921
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2785666921.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTryCompileExec2785666921.dir/CheckSymbolExists.c.o  -o cmTryCompileExec2785666921 -rdynamic 
+CMakeFiles/cmTryCompileExec2785666921.dir/CheckSymbolExists.c.o: 関数 `main' 内:
+CheckSymbolExists.c:(make[1]: ディレクトリ `/home/ikeda/editing_ros/open_source/open_source/sip_tf_manager_ws/build/CMakeFiles/CMakeTmp' から出ます
+.text+0x16): `pthread_create' に対する定義されていない参照です
+collect2: error: ld returned 1 exit status
+make[1]: *** [cmTryCompileExec2785666921] エラー 1
+make: *** [cmTryCompileExec2785666921/fast] エラー 2
+
+File /home/ikeda/editing_ros/open_source/open_source/sip_tf_manager_ws/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/ikeda/editing_ros/open_source/open_source/sip_tf_manager_ws/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec2036902396/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2036902396.dir/build.make CMakeFiles/cmTryCompileExec2036902396.dir/build
+make[1]: ディレクトリ `/home/ikeda/editing_ros/open_source/open_source/sip_tf_manager_ws/build/CMakeFiles/CMakeTmp' に入ります
+/usr/bin/cmake -E cmake_progress_report /home/ikeda/editing_ros/open_source/open_source/sip_tf_manager_ws/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2036902396.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTryCompileExec2036902396.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-2.8/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec2036902396
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2036902396.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTryCompileExec2036902396.dir/CheckFunctionExists.c.o  -o cmTryCompileExec2036902396 -rdynamic -lpthreads 
+/usr/bin/ld: -lpthreads が見つかりません
+collect2: error: ld returned 1 exit status
+make[1]: ディレクトリ `/home/ikeda/editing_ros/open_source/open_source/sip_tf_manager_ws/build/CMakeFiles/CMakeTmp' から出ます
+make[1]: *** [cmTryCompileExec2036902396] エラー 1
+make: *** [cmTryCompileExec2036902396/fast] エラー 2
+
+

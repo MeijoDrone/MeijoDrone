@@ -1,0 +1,486 @@
+//
+//  estimate_position.hpp
+//  
+//
+//  Created by IKEDA Takahiro on 2017/09/06.
+//
+//
+
+#ifndef estimate_position_hpp
+#define estimate_position_hpp
+
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#include <ros/ros.h>
+#include <sensor_msgs/Imu.h>
+#include <geometry_msgs/Vector3.h>
+#include <geometry_msgs/Point.h>
+#include <tf2/LinearMath/Transform.h>
+#include <tf/transform_listener.h>
+#include <mavros_msgs/CommandBool.h>
+#include <mavros_msgs/SetMode.h>
+#include <mavros_msgs/State.h>
+#include <mavros_msgs/RCIn.h>
+#include <std_msgs/Float64.h>
+
+
+const double gravity=9.80665;
+
+void Quat2RollPitchYaw(const geometry_msgs::Quaternion &q, double &roll, double &pitch, double &yaw){
+    tf2::Quaternion q_tf2(q.x, q.y, q.z, q.w);
+    tf2::Matrix3x3(q_tf2).getRPY(roll, pitch, yaw);
+}
+
+void RollPitchYaw2Quat(geometry_msgs::Quaternion &q, double roll, double pitch, double yaw){
+    tf2::Quaternion q_tf2(q.x, q.y, q.z, q.w);
+    q_tf2.setRPY(roll, pitch, yaw);
+    q.x = q_tf2.x();
+    q.y = q_tf2.y();
+    q.z = q_tf2.z();
+    q.w = q_tf2.w();
+}
+
+class TimeSet{
+public:
+    ros::Time raw;
+    double initial;
+    double current;
+    double past;
+    double diff;
+    double limit;
+    TimeSet(double diff_){
+        initial = 0.0;
+        current = 0.0;
+        past    = 0.0;
+        diff    = diff_;
+        limit   = 1.0;
+    }
+    TimeSet(double diff_, double limit_){
+        initial = 0.0;
+        current = 0.0;
+        past    = 0.0;
+        diff    = diff_;
+        limit   = limit_;
+    }
+    void update();
+};
+void TimeSet::update(){
+    raw = ros::Time::now();
+    if(initial == 0.0){
+        initial = (double)(raw.sec)+(double)(raw.nsec)/1000000000.0;
+        current = 0.0;
+        past    = 0.0;
+    }else{
+        past = current;
+        current = (double)(raw.sec)+(double)(raw.nsec)/1000000000.0 - initial;
+        if((current-past) < limit){
+            diff = 0.9*diff + 0.1*(current - past);
+        }
+    }
+}
+
+class SimpleKalman{
+    double Q = 1.0;//dispersion of noise of x
+    double R = 1.0;//dispersion of noise of sensor
+    double P, X, K;
+public:
+    SimpleKalman()
+    :P(0.0), X(0.0)
+    {};
+    SimpleKalman(double P_, double X_)
+    :P(P_), X(X_)
+    {};
+    double update(double measurement){
+        measurementUpdate();
+        double result = X + (measurement - X) * K;
+        X = result;
+        return result;
+    }
+private:
+    void measurementUpdate(){
+        K = (P + Q) / (P + Q + R);
+        P = R * (P + Q) / (R + P + Q);
+    }
+};
+
+class Vector2{
+public:
+    double x, v;
+    Vector2(double x_, double v_){
+        x = x_;
+        v = v_;
+    }
+    Vector2(){
+        x = 0.0;
+        v = 0.0;
+    }
+};
+class Matrix2x2{
+public:
+    double a,b,c,d;
+    Matrix2x2(double a_, double b_, double c_, double d_){
+        a=a_;
+        b=b_;
+        c=c_;
+        d=d_;
+    }
+    Matrix2x2(){
+        a=1.0;
+        b=0.0;
+        c=0.0;
+        d=1.0;
+    }
+};
+
+class Kalman{
+public:
+    
+    Vector2 vecZ;      //measured value
+    Vector2 vecX_p;    //past predicted value
+    Vector2 vecX_c;    //current predicted value
+    Vector2 vecX_f;    //future predicted value
+    Vector2 err;       //predictive error
+    Matrix2x2 matP_p;  //past prediction error matrix
+    Matrix2x2 matP_c;  //current prediction error matrix
+    Matrix2x2 matP_f;  //future prediction error matrix
+    Matrix2x2 matS;
+    Matrix2x2 kGain;   //kalman gain
+    
+    Matrix2x2 coeF;    //internal state matrix
+    Vector2 coeB;      //input matrix/vector
+    Matrix2x2 coeG;    //state noise matrix
+    Matrix2x2 coeH;    //measurement matrix
+    Matrix2x2 coeR;    //covariance matrix
+    Matrix2x2 coeQ;    //covariance matrix
+    double input;
+    Matrix2x2 unit;
+    
+    Kalman(double dt_);
+    
+    void MxM(Matrix2x2& out, Matrix2x2 a, Matrix2x2 b){
+        out.a = a.a*b.a + a.b*b.c;
+        out.b = a.a*b.b + a.b*b.d;
+        out.c = a.c*b.a + a.d*b.c;
+        out.d = a.c*b.b + a.d*b.d;
+    }
+    void inverseM(Matrix2x2& out, Matrix2x2 a){
+        double temp = a.a*a.d - a.b*a.c;
+        out.a = a.d/temp;
+        out.b = -a.b/temp;
+        out.c = -a.c/temp;
+        out.d = a.a/temp;
+    }
+    void transposedM(Matrix2x2& out, Matrix2x2 a){
+        out.a = a.a;
+        out.b = a.c;
+        out.c = a.b;
+        out.d = a.d;
+    }
+    void MsumM(Matrix2x2& out, Matrix2x2 a, Matrix2x2 b){
+        out.a = a.a + b.a;
+        out.b = a.b + b.b;
+        out.c = a.c + b.c;
+        out.d = a.d + b.d;
+    }
+    void MsubM(Matrix2x2& out, Matrix2x2 a, Matrix2x2 b){
+        out.a = a.a - b.a;
+        out.b = a.b - b.b;
+        out.c = a.c - b.c;
+        out.d = a.d - b.d;
+    }
+    void MxV(Vector2& out, Matrix2x2 a, Vector2 b){
+        out.x = a.a*b.x + a.b*b.v;
+        out.v = a.c*b.x + a.d*b.v;
+    }
+    void VsumV(Vector2& out, Vector2 a, Vector2 b){
+        out.x = a.x + b.x;
+        out.v = a.v + b.v;
+    }
+    void VsubV(Vector2& out, Vector2 a, Vector2 b){
+        out.x = a.x - b.x;
+        out.v = a.v - b.v;
+    }
+    void predict();
+    void update();
+    void filter(Vector2& predicted, Vector2& measured, double& input, double& dtime);
+};
+Kalman::Kalman(double dt_)
+: vecZ()      //measured value
+, vecX_p()    //past predicted value
+, vecX_c()    //current predicted value
+, vecX_f()    //future predicted value
+, err()       //predictive error
+, matP_p()    //past prediction error matrix
+, matP_c()    //current prediction error matrix
+, matP_f()    //future prediction error matrix
+, matS()
+, kGain()     //kalman gain
+, coeF(1.0, dt_, 0.0, 1.0)//internal state matrix
+, coeB(pow(dt_,2)/2, dt_)//input matrix/vector
+, coeG()      //state noise matrix
+, coeH()      //measurement matrix
+, coeR()      //covariance matrix
+, coeQ()      //covariance matrix
+, input(0.0)
+, unit()
+{
+}
+void Kalman::predict(){
+    vecX_p = vecX_f;
+    Vector2 temp1;
+    Vector2 temp2;
+    MxV(temp1, coeF, vecX_p);
+    temp2.x = coeB.x * input;
+    temp2.v = coeB.v * input;
+    VsumV(vecX_c, temp1, temp2);
+    
+    matP_p = matP_f;
+    Matrix2x2 temp3;
+    Matrix2x2 temp4;
+    Matrix2x2 temp5;
+    transposedM(temp3,coeG);
+    MxM(temp4,coeQ,temp3);
+    MxM(temp3,coeG,temp4);
+    transposedM(temp4,coeF);
+    MxM(temp5,matP_p,temp4);
+    MxM(temp4,coeF,temp5);
+    MsumM(matP_c,temp4,temp3);
+}
+void Kalman::update(){
+    Vector2 temp1;
+    MxV(temp1,coeH,vecX_c);
+    VsubV(err,vecZ,temp1);
+    
+    Matrix2x2 temp2;
+    Matrix2x2 temp3;
+    Matrix2x2 temp4;
+    transposedM(temp2,coeH);
+    MxM(temp3,matP_c,temp2);
+    MxM(temp2,coeH,temp3);
+    MsumM(matS,coeR,temp2);
+    
+    inverseM(temp2,matS);
+    transposedM(temp3,coeH);
+    MxM(temp4,temp3,temp2);
+    MxM(kGain,matP_c,temp4);
+    
+    MxV(temp1,kGain,err);
+    VsumV(vecX_f,vecX_c,temp1);
+    
+    MxM(temp2,kGain,coeH);
+    MsubM(temp3,unit,temp2);
+    MxM(matP_f,temp3,matP_c);
+}
+void Kalman::filter(Vector2& predicted, Vector2& measured, double& input, double& dtime){
+    vecZ = measured;
+    input = input;
+    coeF.b = dtime;
+    coeB.x = pow(dtime,2)/2;
+    coeB.v = dtime;
+    predict();
+    update();
+    predicted = vecX_f;
+}
+
+
+class AccKalman{
+public:
+    
+    Vector2 vecZ;      //measured value
+    Vector2 vecX_p;    //past predicted value
+    Vector2 vecX_c;    //current predicted value
+    Vector2 vecX_f;    //future predicted value
+    Vector2 err;       //predictive error
+    Matrix2x2 matP_p;  //past prediction error matrix
+    Matrix2x2 matP_c;  //current prediction error matrix
+    Matrix2x2 matP_f;  //future prediction error matrix
+    Matrix2x2 matS;
+    Matrix2x2 kGain;   //kalman gain
+    
+    Matrix2x2 coeF;    //internal state matrix
+    Vector2 coeB;      //input matrix/vector
+    Matrix2x2 coeG;    //state noise matrix
+    Matrix2x2 coeH;    //measurement matrix
+    Matrix2x2 coeR;    //covariance matrix
+    Matrix2x2 coeQ;    //covariance matrix
+    double input;
+    Matrix2x2 unit;
+    
+    AccKalman(double dt_);
+    
+    void MxM(Matrix2x2& out, Matrix2x2 a, Matrix2x2 b){
+        out.a = a.a*b.a + a.b*b.c;
+        out.b = a.a*b.b + a.b*b.d;
+        out.c = a.c*b.a + a.d*b.c;
+        out.d = a.c*b.b + a.d*b.d;
+    }
+    void inverseM(Matrix2x2& out, Matrix2x2 a){
+        double temp = a.a*a.d - a.b*a.c;
+        out.a = a.d/temp;
+        out.b = -a.b/temp;
+        out.c = -a.c/temp;
+        out.d = a.a/temp;
+    }
+    void transposedM(Matrix2x2& out, Matrix2x2 a){
+        out.a = a.a;
+        out.b = a.c;
+        out.c = a.b;
+        out.d = a.d;
+    }
+    void MsumM(Matrix2x2& out, Matrix2x2 a, Matrix2x2 b){
+        out.a = a.a + b.a;
+        out.b = a.b + b.b;
+        out.c = a.c + b.c;
+        out.d = a.d + b.d;
+    }
+    void MsubM(Matrix2x2& out, Matrix2x2 a, Matrix2x2 b){
+        out.a = a.a - b.a;
+        out.b = a.b - b.b;
+        out.c = a.c - b.c;
+        out.d = a.d - b.d;
+    }
+    void MxV(Vector2& out, Matrix2x2 a, Vector2 b){
+        out.x = a.a*b.x + a.b*b.v;
+        out.v = a.c*b.x + a.d*b.v;
+    }
+    void VsumV(Vector2& out, Vector2 a, Vector2 b){
+        out.x = a.x + b.x;
+        out.v = a.v + b.v;
+    }
+    void VsubV(Vector2& out, Vector2 a, Vector2 b){
+        out.x = a.x - b.x;
+        out.v = a.v - b.v;
+    }
+    void predict();
+    void update();
+    void filter(Vector2& predicted, Vector2& measured, double& input, double& dtime);
+};
+
+AccKalman::AccKalman(double dt_)
+: vecZ()      //measured value
+, vecX_p()    //past predicted value
+, vecX_c()    //current predicted value
+, vecX_f()    //future predicted value
+, err()       //predictive error
+, matP_p()    //past prediction error matrix
+, matP_c()    //current prediction error matrix
+, matP_f()    //future prediction error matrix
+, matS()
+, kGain()     //kalman gain
+, coeF(1.0, dt_, -0.00001, 0.0)//internal state matrix
+, coeB(0.0, gravity)//input matrix/vector
+, coeG()      //state noise matrix
+, coeH()      //measurement matrix
+, coeR()      //covariance matrix
+, coeQ()      //covariance matrix
+, input(0.0)
+, unit()
+{
+}
+void AccKalman::predict(){
+    vecX_p = vecX_f;
+    Vector2 temp1;
+    Vector2 temp2;
+    MxV(temp1, coeF, vecX_p);
+    temp2.x = coeB.x * input;
+    temp2.v = coeB.v * input;
+    VsumV(vecX_c, temp1, temp2);
+    
+    matP_p = matP_f;
+    Matrix2x2 temp3;
+    Matrix2x2 temp4;
+    Matrix2x2 temp5;
+    transposedM(temp3,coeG);
+    MxM(temp4,coeQ,temp3);
+    MxM(temp3,coeG,temp4);
+    transposedM(temp4,coeF);
+    MxM(temp5,matP_p,temp4);
+    MxM(temp4,coeF,temp5);
+    MsumM(matP_c,temp4,temp3);
+}
+void AccKalman::update(){
+    Vector2 temp1;
+    MxV(temp1,coeH,vecX_c);
+    VsubV(err,vecZ,temp1);
+    
+    Matrix2x2 temp2;
+    Matrix2x2 temp3;
+    Matrix2x2 temp4;
+    transposedM(temp2,coeH);
+    MxM(temp3,matP_c,temp2);
+    MxM(temp2,coeH,temp3);
+    MsumM(matS,coeR,temp2);
+    
+    inverseM(temp2,matS);
+    transposedM(temp3,coeH);
+    MxM(temp4,temp3,temp2);
+    MxM(kGain,matP_c,temp4);
+    
+    MxV(temp1,kGain,err);
+    VsumV(vecX_f,vecX_c,temp1);
+    
+    MxM(temp2,kGain,coeH);
+    MsubM(temp3,unit,temp2);
+    MxM(matP_f,temp3,matP_c);
+}
+void AccKalman::filter(Vector2& predicted, Vector2& measured, double& input_, double& dtime){
+    vecZ = measured;
+    input = input_;
+    coeF.b = dtime;
+    coeB.x = 0.0;//pow(dtime,2)/2;
+    coeB.v = gravity;//dtime;
+    predict();
+    update();
+    predicted = vecX_f;
+}
+
+class Estimation{
+public:
+    TimeSet time;
+    geometry_msgs::Vector3 body_accel;
+    geometry_msgs::Vector3 measured_accel;
+    geometry_msgs::Vector3 measured_velocity;
+    geometry_msgs::Vector3 accel;
+    geometry_msgs::Vector3 velocity;
+    geometry_msgs::Vector3 position;
+    Vector2 measured_x;
+    Vector2 measured_y;
+    Vector2 measured_z;
+    Vector2 predicted_x;
+    Vector2 predicted_y;
+    Vector2 predicted_z;
+    
+    AccKalman kalman_x;
+    AccKalman kalman_y;
+    AccKalman kalman_z;
+    
+    Estimation();
+    
+    void position_update(geometry_msgs::Vector3 sensor_velocity, sensor_msgs::Imu sensor_imu, double yaw, geometry_msgs::Vector3 input, geometry_msgs::Vector3 measured_position, bool refresh);
+
+};
+Estimation::Estimation()
+:time(0.01)
+, body_accel()
+, measured_accel()
+, measured_velocity()
+, accel()
+, velocity()
+, position()
+, measured_x()
+, measured_y()
+, measured_z()
+, predicted_x()
+, predicted_y()
+, predicted_z()
+, kalman_x(0.01)
+, kalman_y(0.01)
+, kalman_z(0.01)
+{
+}
+
+
+
+
+#endif /* estimate_position_hpp */

@@ -1,0 +1,8 @@
+prefix=/home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/install
+
+Name: sip_mavros
+Description: Description of sip_mavros
+Version: 0.0.0
+Cflags: -I/home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/install/include -I/usr/include
+Libs: -L/home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/install/lib -lsip_mavros -l:/usr/lib/x86_64-linux-gnu/libtinyxml.so
+Requires: geometry_msgs mavros_msgs tf2 tf roscpp rospy

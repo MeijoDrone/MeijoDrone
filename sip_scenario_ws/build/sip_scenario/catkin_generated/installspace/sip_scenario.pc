@@ -1,0 +1,8 @@
+prefix=/home/ikeda/editing_ros/open_source/open_source/sip_scenario_ws/install
+
+Name: sip_scenario
+Description: Description of sip_scenario
+Version: 0.0.0
+Cflags: -I/home/ikeda/editing_ros/open_source/open_source/sip_scenario_ws/install/include
+Libs: -L/home/ikeda/editing_ros/open_source/open_source/sip_scenario_ws/install/lib -lsip_scenario
+Requires: geometry_msgs roscpp rospy sensor_msgs std_msgs tf message_runtime

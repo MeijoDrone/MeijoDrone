@@ -181,6 +181,17 @@ public:
     
     void alt_cb(const std_msgs::Float64 &msg){
         ground_alt = zMean.move_ave((double)(msg.data*cos(attitude.x)*cos(attitude.y)));
+        static tf::TransformBroadcaster tfB_;
+        tf::Quaternion tmp_att_;
+        tf::Vector3 tmp_posi_;
+        tmp_att_.setRPY(0.0, 0.0, 0.0);
+        tmp_posi_.setX(0.0);
+        tmp_posi_.setY(0.0);
+        tmp_posi_.setZ((float)ground_alt);
+        foot_blink_trns.setRotation(tmp_att_);
+        foot_blink_trns.setOrigin(tmp_posi_);
+        foot_blink_trns.stamp_ = ros::Time::now();//msg.header.stamp;
+        tfB_.sendTransform(foot_blink_trns);
     }
 };
 Member::Member(double freq_)

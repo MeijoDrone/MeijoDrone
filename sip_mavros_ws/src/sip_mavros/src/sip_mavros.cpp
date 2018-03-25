@@ -425,7 +425,7 @@ SipMavrosMem::SipMavrosMem(
 , yaw_ctrl(0.0)
 , fixed_alt(0.0)
 
-        , throttle_ave(0.3)
+        , throttle_ave(0.4)
         , throttle_pid(0.0)
         , landing_alt(0)
         , ground(0.02)
@@ -908,8 +908,8 @@ void SipMavrosMem::publishCtrlInput(){
     if(current_state.mode == "OFFBOARD"){
         printf("a\n");
         throttle_ave = 0.999 * throttle_ave + 0.001 * ( target_throttle.data - alt_pid.offset );//previous 0.998 vs 0.002
-        if(throttle_ave > 0.7){
-            throttle_ave = 0.7;
+        if(throttle_ave > 0.85){
+            throttle_ave = 0.85;
         }else if(throttle_ave < 0.3){
             throttle_ave = 0.3;
         }
@@ -1218,6 +1218,7 @@ int main(int argc, char **argv){
     fprintf(fp,"desRoll\tdesPitch\tdesYaw\tdesThrottle\t");
     fprintf(fp,"imuRoll\timuPitch\timuYaw\taveThrottle\t");
     fprintf(fp,"tfYaw\t");
+    fprintf(fp,"battery\t");
     
     fprintf(fp,"\n");
 	while(ros::ok() && smm.ok() && not smm.rc_exit){
@@ -1252,7 +1253,8 @@ int main(int argc, char **argv){
                 smm.throttle_ave);//17
         fprintf(fp,"%lf\t",
                 smm.compass_yaw);//18
-        
+        fprintf(fp,"%f\t",
+                smm.battery_percent);//19
         
         
 

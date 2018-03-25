@@ -1,1 +1,1 @@
-/usr/bin/c++  -fPIC    -shared -Wl,-soname,libgtest.so -o libgtest.so CMakeFiles/gtest.dir/src/gtest-all.cc.o  -L/home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/build/gtest/src -lpthread -Wl,-rpath,/home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/build/gtest/src 
+/usr/bin/c++  -fPIC    -shared -Wl,-soname,libgtest.so -o libgtest.so CMakeFiles/gtest.dir/src/gtest-all.cc.o  -L/home/ikeda/MeijoDrone/sip_mavros_ws/build/gtest/src -lpthread -Wl,-rpath,/home/ikeda/MeijoDrone/sip_mavros_ws/build/gtest/src 

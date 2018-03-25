@@ -239,33 +239,6 @@ public:
 };
 
 
-
-class Estimation{
-public:
-    TimeSet time;
-    geometry_msgs::Vector3 body_accel;
-    geometry_msgs::Vector3 measured_accel;
-    geometry_msgs::Vector3 measured_velocity;
-    geometry_msgs::Vector3 accel;
-    geometry_msgs::Vector3 velocity;
-    geometry_msgs::Vector3 position;
-    Vector2 measured_x;
-    Vector2 measured_y;
-    Vector2 measured_z;
-    Vector2 predicted_x;
-    Vector2 predicted_y;
-    Vector2 predicted_z;
-    
-    AccKalman kalman_x;
-    AccKalman kalman_y;
-    AccKalman kalman_z;
-    
-    Estimation();
-    
-    void position_update(geometry_msgs::Vector3 sensor_velocity, sensor_msgs::Imu sensor_imu, double yaw, geometry_msgs::Vector3 input, geometry_msgs::Vector3 measured_position, bool refresh);
-
-};
-
 class LPF{//low pass filter
 public:
     double k;

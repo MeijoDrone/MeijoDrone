@@ -67,14 +67,14 @@ set(sip_mavros_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(sip_mavros_SOURCE_PREFIX /home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/src/sip_mavros)
-  set(sip_mavros_DEVEL_PREFIX /home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/devel)
+  set(sip_mavros_SOURCE_PREFIX /home/ikeda/MeijoDrone/sip_mavros_ws/src/sip_mavros)
+  set(sip_mavros_DEVEL_PREFIX /home/ikeda/MeijoDrone/sip_mavros_ws/devel)
   set(sip_mavros_INSTALL_PREFIX "")
   set(sip_mavros_PREFIX ${sip_mavros_DEVEL_PREFIX})
 else()
   set(sip_mavros_SOURCE_PREFIX "")
   set(sip_mavros_DEVEL_PREFIX "")
-  set(sip_mavros_INSTALL_PREFIX /home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/install)
+  set(sip_mavros_INSTALL_PREFIX /home/ikeda/MeijoDrone/sip_mavros_ws/install)
   set(sip_mavros_PREFIX ${sip_mavros_INSTALL_PREFIX})
 endif()
 
@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(sip_mavros_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "/home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/src/sip_mavros/include;/usr/include " STREQUAL " ")
+if(NOT "/home/ikeda/MeijoDrone/sip_mavros_ws/src/sip_mavros/include;/usr/include " STREQUAL " ")
   set(sip_mavros_INCLUDE_DIRS "")
-  set(_include_dirs "/home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/src/sip_mavros/include;/usr/include")
+  set(_include_dirs "/home/ikeda/MeijoDrone/sip_mavros_ws/src/sip_mavros/include;/usr/include")
   foreach(idir ${_include_dirs})
     if(IS_ABSOLUTE ${idir} AND IS_DIRECTORY ${idir})
       set(include ${idir})
@@ -103,7 +103,7 @@ if(NOT "/home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/src/sip_ma
         message(FATAL_ERROR "Project 'sip_mavros' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  Ask the maintainer 'fuji <fuji@todo.todo>' to fix it.")
       endif()
     else()
-      message(FATAL_ERROR "Project 'sip_mavros' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/src/sip_mavros/${idir}'.  Ask the maintainer 'fuji <fuji@todo.todo>' to fix it.")
+      message(FATAL_ERROR "Project 'sip_mavros' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/ikeda/MeijoDrone/sip_mavros_ws/src/sip_mavros/${idir}'.  Ask the maintainer 'fuji <fuji@todo.todo>' to fix it.")
     endif()
     _list_append_unique(sip_mavros_INCLUDE_DIRS ${include})
   endforeach()
@@ -122,7 +122,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/devel/lib;/home/ikeda/sample_ws/devel/lib;/opt/ros/indigo/lib)
+    foreach(path /home/ikeda/MeijoDrone/sip_mavros_ws/devel/lib;/home/ikeda/test_ros/epos_ws/devel/lib;/home/ikeda/sample_ws/devel/lib;/opt/ros/indigo/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

@@ -1,8 +1,8 @@
-# Install script for directory: /home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/src/sip_mavros
+# Install script for directory: /home/ikeda/MeijoDrone/sip_mavros_ws/src/sip_mavros
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  SET(CMAKE_INSTALL_PREFIX "/home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/install")
+  SET(CMAKE_INSTALL_PREFIX "/home/ikeda/MeijoDrone/sip_mavros_ws/install")
 ENDIF(NOT DEFINED CMAKE_INSTALL_PREFIX)
 STRING(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -33,17 +33,17 @@ IF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 ENDIF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/build/sip_mavros/catkin_generated/installspace/sip_mavros.pc")
+  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ikeda/MeijoDrone/sip_mavros_ws/build/sip_mavros/catkin_generated/installspace/sip_mavros.pc")
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/sip_mavros/cmake" TYPE FILE FILES
-    "/home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/build/sip_mavros/catkin_generated/installspace/sip_mavrosConfig.cmake"
-    "/home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/build/sip_mavros/catkin_generated/installspace/sip_mavrosConfig-version.cmake"
+    "/home/ikeda/MeijoDrone/sip_mavros_ws/build/sip_mavros/catkin_generated/installspace/sip_mavrosConfig.cmake"
+    "/home/ikeda/MeijoDrone/sip_mavros_ws/build/sip_mavros/catkin_generated/installspace/sip_mavrosConfig-version.cmake"
     )
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/sip_mavros" TYPE FILE FILES "/home/ikeda/editing_ros/open_source/open_source/sip_mavros_ws/src/sip_mavros/package.xml")
+  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/sip_mavros" TYPE FILE FILES "/home/ikeda/MeijoDrone/sip_mavros_ws/src/sip_mavros/package.xml")
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 

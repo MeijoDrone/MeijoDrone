@@ -19,11 +19,11 @@ ros_lightware <https://github.com/wavelab/ros_lightware>\
 cereal_port <https://github.com/wavelab/cereal_port>\
 hokuyo_node <https://github.com/ros-drivers/hokuyo_node> (urg_nodeで代替可能)\
 hector_slam <https://github.com/tu-darmstadt-ros-pkg/hector_slam>\
-hector_slam_exsample <https://github.com/DaikiMaekawa/hector_slam_example>
+hector_slam_example <https://github.com/DaikiMaekawa/hector_slam_example>
 
 lightware_wsを作成し，ros_lightwareとcereal_portをMakeして下さい（高度計測）．\
 hokuyo_node_wsを作成し，hokuyo_nodeをMakeして下さい（測域計）．\
-hector_slam_wsを作成し，hector_slamとhector_slam_wsをMakeして下さい（SLAM）．
+hector_slam_wsを作成し，hector_slamとhector_slam_exampleをMakeして下さい（SLAM）．
 
 sip_mavros_nodeではPIDフィードバックで位置制御しています．\
 sip_mavros_wsディレクトリ直下にPIDゲインを設定する\

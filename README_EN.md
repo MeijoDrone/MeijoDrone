@@ -33,7 +33,11 @@ Make "hector_slam_ws" including "hector_slam" and "hector_slam_example" for hand
 In "sip_mavros_node," position control consists of position, velocity and acceleration PID feedbacks parallelly.\
 There is PID parameter file in "sip_mavros_ws" directory as following.\
 param_hexa.xml\
-The parameter should be modified proper value for your UAV.\
+The parameter should be modified proper value for your UAV.
+There are two parameter sets in the UAV system including Autopilot: parameters of attitude control in Autopilot and this parameters of position control.
+First, modify the parameters of attitude control.
+It is recommended to execute auto tune on Autopilot.
+Then, modify the parameters of position control.
 
 There is a shell script to rosrun all nodes in this repository. The work-space directories are named as above, the shell script can be used without any editing. Put the work spaces and the script at same directory. Start "tmux," which separates terminal into multi window, at the directory, then start the script.\
 start_drone.sh

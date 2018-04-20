@@ -56,6 +56,21 @@ Summarize the role of each window created by the script as following.\
 10: roscoe\
 11: command, which terminates sip_mavros_node, is inserted
 
+sip_mavros_node refers the value of radio controller (RC) via Pixhawk and MAVROS. Seven sticks of RC are used in sip_mavros_node. Set each stick with appropriate number.\
+•Roll stick (sw 0): control roll in manual mode/ emergency manual interruption in auto mode (tilt the stick ±50 in digital value of RC)\
+•Pitch stick (sw 1): control pitch in manual mode/ emergency manual interruption in auto mode (tilt the stick ±50 in digital value of RC)\
+•Yaw stick (sw 3): control yaw in manual mode/ emergency manual interruption in auto mode (tilt the stick ±50 in digital value of RC)\
+•Trim stick (sw 5): modify desired altitude rate R (Highest R = 1 \~ Lowest R = 0, desired altitude = input altitude * R)\
+•Arbitrary stick (sw 6): HIGH = start program, LOW = end program\
+•Arbitrary stick (sw 8): HIGH = manual control, LOW = auto control\
+•Arbitrary stick: switch Offboard Mode of Pixhawk (the node does not refer this value)
+
+Start sip_mavros_node on terminal, then the program wait for switching Offboard Mode.\
+Switch Offboard Mode, then the program wait to be started by sw 6.\
+After the program is started, the props start to rotate. Input desired position on the terminal.\
+The desired altitude can be modified by using sw 5.\
+If the program is interrupted by roll/pitch/yaw stick as emergency manual interruption in auto control, the control method is fixed as manual control (it cannot reset into auto control). Note, the altitude is controlled automatically in manual control mode.\
+When finish the program, set the desired altitude less than 0 m and confirm that the altitude becomes enough low, then switch sw 6 to finish. sw 6 can work when UAV hovers, therefore the switch works as emergency stop switch.
 
 Summarize topics of subscriber and publisher in each node.\
 sip_mavros_node (in sip_mavros_ws)\

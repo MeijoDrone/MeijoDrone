@@ -8,9 +8,9 @@ All components are connected via ROS.\
 When a desired waypoint is input as ROS service, ramp desired trajectory is generated.
 
 Install "mavros" to connect Pixhawk and the companion computer with MAVLINK protocol.\
-user:~$ sudo apt-get install ros-kinetic-mavros\
-user:~$ sudo apt-get install ros-kinetic-mavros-extras\
-user:~$ sudo apt-get install ros-kinetic-mavros-msgs\
+user:\~$ sudo apt-get install ros-kinetic-mavros\
+user:\~$ sudo apt-get install ros-kinetic-mavros-extras\
+user:\~$ sudo apt-get install ros-kinetic-mavros-msgs\
 when the connection can not be made with error massage mentioning "install_geographiclib_datasets.sh", execute follows\
 user:/opt/ros/kinetic/lib/mavros$ sudo ./install_geographiclib_datasets.sh
 

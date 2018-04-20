@@ -1,6 +1,6 @@
 # MeijoDrone
 
-Autopilotファームウェアを搭載したPixhawkを使用し，ubuntuマシン上でROSを走らせ，lightware SF10/Bによる高度計測，Simple URGを使用したSLAMによる水平位置推定を行うことを想定した構成になっています．また目標位置を入力するとRamp入力で目標位置を生成します．
+Autopilotファームウェアを搭載したPixhawkを使用し，ubuntuマシン上でROSを走らせ，lightware SF10/Bによる高度計測，Simple URGを使用したSLAMによる水平位置推定を行うことを想定した構成になっています．また目標位置を入力するとRamp入力で目標位置を生成します．安全のためにプロポと併用して運用します．
 
 PixhawkとPCをMAVLINKで接続するために，mavrosをインストールして下さい．\
 $ sudo apt-get install ros-kinetic-mavros\
@@ -50,6 +50,22 @@ start_drone.sh
 9: lightware_node\
 10: roscoe\
 11: sip_mavros_nodeを強制終了するコマンド
+
+sip_mavros_nodeはプロポの制御信号をPixhawk・MAVROSを経由して参照します．使用するプロポのスティックは7箇所です．プロポのスイッチ番号の設定を適切に行ってください．\
+ロール（sw 0）：ロール操縦・緊急介入（デジタルで±50傾ける）\
+ピッチ（sw 1）：ピッチ操縦・緊急介入（デジタルで±50傾ける）\
+ヨー（sw 3）：ヨー操縦・緊急介入（デジタルで±50傾ける）\
+右手トリム（sw 5）：目標高度割合R（Highest R = 1 ~ Lowest R = 0，目標高度 = 入力目標高度*R）\
+任意スイッチ（sw 6）：HIGH=プログラム開始，LOW=プログラム終了\
+任意スイッチ（sw 8）：HIGH=マニュアル操縦，LOW=自動操縦\
+任意スイッチ：PixhawkのOffboard Mode切り替え（nodeは参照しません）
+
+sip_mavros_nodeをターミナル上で開始すると，Offboard Modeへの切り替えを待機します．\
+プロポでOffboard Modeに切り替えると，sw 6のプログラム開始を待機します．\
+プログラムが開始するとプロペラが回転します．任意の目標位置を入力してください．\
+sw 5で入力した目標高度を割合で減少することが可能です．\
+自動操縦の状態でロール・ピッチ・ヨーで緊急介入すると，その後，常時マニュアル操縦になります．ただし高度は自動で制御されます．\
+プログラムを終了させる場合は十分に高度を低くしてからsw 6を切り替えてください．sw 6はホバー状態でもプログラムを終了するので緊急停止としても使用できます．
 
 以下に各nodeのSubscriberおよびPublisherをまとめます．\
 sip_mavros_node (in sip_mavros_ws)\

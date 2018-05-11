@@ -21,7 +21,8 @@ hokuyo_node <https://github.com/ros-drivers/hokuyo_node> (urg_nodeで代替可�
 hector_slam <https://github.com/tu-darmstadt-ros-pkg/hector_slam>\
 hector_slam_example <https://github.com/DaikiMaekawa/hector_slam_example>
 
-hokuyo_node
+hokuyo_nodeをmakeするためにros-driver/driver_commonをインストールする必要があります．\
+$ sudo apt-get install ros-kinetic-driver-common
 
 lightware_wsを作成し，ros_lightwareとcereal_portをMakeして下さい（高度計測）．\
 hokuyo_node_wsを作成し，hokuyo_nodeをMakeして下さい（測域計）．\

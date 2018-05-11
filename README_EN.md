@@ -26,6 +26,9 @@ hokuyo_node <https://github.com/ros-drivers/hokuyo_node> ("urg_node" is also ava
 hector_slam <https://github.com/tu-darmstadt-ros-pkg/hector_slam>\
 hector_slam_example <https://github.com/DaikiMaekawa/hector_slam_example>
 
+Install ros-driver/driver_common to make hokuyo_node.\
+$ sudo apt-get install ros-kinetic-driver-common
+
 Make "lightware_ws" including "ros_lightware" and "cereal_port" packages for altitude measurement.\
 Make "hokuyo_node_ws" including "hokuyo_node" (or "urg_node") for laser range finder.\
 Make "hector_slam_ws" including "hector_slam" and "hector_slam_example" for handling SLAM.

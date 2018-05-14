@@ -55,7 +55,7 @@ tmux send-keys -t ${name}.5  'roslaunch hokuyo_node hokuyo_test.launch' C-m
 tmux send-keys -t ${name}.6  'rosrun sip_tf_manager sip_tf_manager_node' C-m
 tmux send-keys -t ${name}.7  'rostopic echo /altitude' C-m
 tmux send-keys -t ${name}.8  'rosrun sip_scenario sip_scenario_node' C-m
-tmux send-keys -t ${name}.9  'rosrun lightware lightware_node' C-m
+tmux send-keys -t ${name}.9  'rosrun altitude_sensor altitude_sensor_node' C-m
 tmux send-keys -t ${name}.11 'rostopic pub -1 /sip/quit std_msgs/Empty' C-m
 
 sleep 3
@@ -64,4 +64,4 @@ tmux send-keys -t ${name}.1  'roslaunch hector_slam_example hector_hokuyo.launch
 
 sleep 3
 
-tmux send-keys -t ${name}.0  'rosrun sip_mavros sip_mavros_para_accept_rc_hexa_node'
+tmux send-keys -t ${name}.0  'rosrun sip_mavros sip_mavros_node'

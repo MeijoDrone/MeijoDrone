@@ -73,7 +73,8 @@ Switch Offboard Mode, then the program wait to be started by sw 6.\
 After the program is started, the props start to rotate. Input desired position on the terminal.\
 The desired altitude can be modified by using sw 5.\
 If the program is interrupted by roll/pitch/yaw stick as emergency manual interruption in auto control, the control method is fixed as manual control (it cannot reset into auto control). Note, the altitude is controlled automatically in manual control mode.\
-When finish the program, set the desired altitude less than 0 m and confirm that the altitude becomes enough low, then switch sw 6 to finish. sw 6 can work when UAV hovers, therefore the switch works as emergency stop switch.
+When finish the program, set the desired altitude less than 0 m and confirm that the altitude becomes enough low, then switch sw 6 to finish. sw 6 can work when UAV hovers, therefore the switch works as emergency stop switch.\
+Pixhawk beeps when the program is ended because Pixhawk doesn't receive any control signal from the PC during Offboard Mode. Finish Offboard Mode by RC.
 
 Summarize topics of subscriber and publisher in each node.\
 sip_mavros_node (in sip_mavros_ws)\

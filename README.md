@@ -30,15 +30,15 @@ hokuyo_node_wsを作成し，hokuyo_nodeをMakeして下さい（測域計）．
 hector_slam_wsを作成し，hector_slamとhector_slam_exampleをMakeして下さい（SLAM）．\
 またhector_hokuyo.launchでtfを発行しているため，コメントアウトします．\
 $ emacs ./hector_slam_ws/src/hector-slam-example/launch/hector_hokuyo.launch\
+以下をコメントアウト．
 =-=-=-=-=\
-< ! - - \
+<node pkg="tf" type="static_transform_publisher" name="map_2_odom" args="0 0 0 0 0 0 /map /odom 100"/>\
 <node pkg="tf" type="static_transform_publisher" name="map_2_odom" args="0 0 0 0 0 0 /map /odom 100"/>\
 <node pkg="tf" type="static_transform_publisher" name="odom_2_base_footprint" args="0 0 0 0 0 0 /odom /base_footprint 100"/>\
 <node pkg="tf" type="static_transform_publisher" name="base_footprint_2_base_link" args="0 0 0 0 0 0 /base_footprint /base_link 100"/>\
 <node pkg="tf" type="static_transform_publisher" name="base_link_2_base_stabilized_link" args="0 0 0 0 0 0 /base_link /base_stabilized 100"/>\
 <node pkg="tf" type="static_transform_publisher" name="base_stablized_2_base_frame" args="0 0 0 0 0 0 /base_stabilized /base_frame 100"/>\
 <node pkg="tf" type="static_transform_publisher" name="base_frame_2_laser_link" args="0 0 0 0 0 0 /base_frame /laser 100"/>\
-- - > \
 =-=-=-=-=
 
 sip_mavros_nodeではPIDフィードバックで位置制御しています．\

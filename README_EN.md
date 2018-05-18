@@ -31,7 +31,19 @@ $ sudo apt-get install ros-kinetic-driver-common
 
 Make "lightware_ws" including "ros_lightware" and "cereal_port" packages for altitude measurement.\
 Make "hokuyo_node_ws" including "hokuyo_node" (or "urg_node") for laser range finder.\
-Make "hector_slam_ws" including "hector_slam" and "hector_slam_example" for handling SLAM.
+Make "hector_slam_ws" including "hector_slam" and "hector_slam_example" for handling SLAM.\
+hector_hokuyo.launch broadcast tf, therefore comment out the broadcaster.\
+$ emacs ./hector_slam_ws/src/hector-slam-example/launch/hector_hokuyo.launch\
+Comment out following line.
+=-=-=-=-=\
+\<node pkg="tf" type="static_transform_publisher" name="map_2_odom" args="0 0 0 0 0 0 /map /odom 100"/>\
+\<node pkg="tf" type="static_transform_publisher" name="map_2_odom" args="0 0 0 0 0 0 /map /odom 100"/>\
+\<node pkg="tf" type="static_transform_publisher" name="odom_2_base_footprint" args="0 0 0 0 0 0 /odom /base_footprint 100"/>\
+\<node pkg="tf" type="static_transform_publisher" name="base_footprint_2_base_link" args="0 0 0 0 0 0 /base_footprint /base_link 100"/>\
+\<node pkg="tf" type="static_transform_publisher" name="base_link_2_base_stabilized_link" args="0 0 0 0 0 0 /base_link /base_stabilized 100"/>\
+\<node pkg="tf" type="static_transform_publisher" name="base_stablized_2_base_frame" args="0 0 0 0 0 0 /base_stabilized /base_frame 100"/>\
+\<node pkg="tf" type="static_transform_publisher" name="base_frame_2_laser_link" args="0 0 0 0 0 0 /base_frame /laser 100"/>\
+=-=-=-=-=
 
 In "sip_mavros_node," position control consists of position, velocity and acceleration PID feedbacks parallelly.\
 There is PID parameter file in "sip_mavros_ws" directory as following.\

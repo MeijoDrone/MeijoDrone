@@ -44,20 +44,6 @@ mavros_msgs/RCIn.h
 std_msgs/Float64.h
 -
 
-/home/ikeda/MeijoDrone/sip_mavros_ws/src/sip_mavros/src/PID.cpp
-stdio.h
--
-float.h
--
-math.h
--
-sip_mavros/PID.h
-/home/ikeda/MeijoDrone/sip_mavros_ws/src/sip_mavros/src/sip_mavros/PID.h
-
-/home/ikeda/MeijoDrone/sip_mavros_ws/src/sip_mavros/src/estimate_position.cpp
-sip_mavros/estimate_position.hpp
-/home/ikeda/MeijoDrone/sip_mavros_ws/src/sip_mavros/src/sip_mavros/estimate_position.hpp
-
 /home/ikeda/MeijoDrone/sip_mavros_ws/src/sip_mavros/src/sip_mavros.cpp
 math.h
 -

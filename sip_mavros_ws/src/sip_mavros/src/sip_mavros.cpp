@@ -342,10 +342,18 @@ public:
     void imu_cb(const sensor_msgs::Imu& msg){
         imu_tm.update();
         body_imu = msg;
-        Quat2RollPitchYaw(msg.orientation, body_attitude.x, body_attitude.y, body_attitude.z);
+	   geometry_msgs::Vector3 temp;
+        Quat2RollPitchYaw(msg.orientation, temp.x, temp.y, temp.z);
+	   if(body_attitude.x==0.0 && body_attitude.y==0.0 && body_attitude.z==0.0){
+		   body_attitude = temp;
+	   }
+	   body_attitude.x = 0.9*body_attitude.x + 0.1*temp.x;
+	   body_attitude.y = 0.9*body_attitude.y + 0.1*temp.y;
+	   body_attitude.z = 0.9*body_attitude.z + 0.1*temp.z;
+
         attitude_rate.x = 0.8*attitude_rate.x + 0.2*msg.angular_velocity.x;
         attitude_rate.y = 0.8*attitude_rate.y + 0.2*msg.angular_velocity.y;
-        attitude_rate.y = 0.8*attitude_rate.y + 0.2*msg.angular_velocity.y;
+        attitude_rate.z = 0.8*attitude_rate.z + 0.2*msg.angular_velocity.z;
         
         double temp_roll = body_attitude.x;
         double temp_pitch = body_attitude.y;

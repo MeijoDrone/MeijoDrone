@@ -1,2 +1,2 @@
 sip_scenario
--DCATKIN_DEVEL_PREFIX=/home/ikeda/editing_ros/open_source/open_source/sip_scenario_ws/devel -DCMAKE_INSTALL_PREFIX=/home/ikeda/editing_ros/open_source/open_source/sip_scenario_ws/install -G Unix Makefiles
+-DCATKIN_DEVEL_PREFIX=/home/ikeda/MeijoDrone/sip_scenario_ws/devel -DCMAKE_INSTALL_PREFIX=/home/ikeda/MeijoDrone/sip_scenario_ws/install -G Unix Makefiles
